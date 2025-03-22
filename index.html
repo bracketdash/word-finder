@@ -12,7 +12,54 @@
       <div class="header">
         <h1>Word Finder</h1>
       </div>
-      <div class="container"></div>
+      <div class="container">
+        <h2>Word clues</h2>
+        <small>? for unknowns; leave blank if no known letters</small>
+        <input type="text" name="template" />
+        <h2>Word length</h2>
+        <small>Leave blank if no length information is known</small>
+        <input type="number" name="length" />
+        <fieldset>
+          <label>
+            <input type="radio" name="lengthtype" value="exact" checked />
+            <span>Above is <strong>exact</strong> length</span>
+          </label>
+          <label>
+            <input type="radio" name="lengthtype" value="min" />
+            <span>Above is <strong>minimum</strong> length</span>
+          </label>
+          <label>
+            <input type="radio" name="lengthtype" value="max" />
+            <span>Above is <strong>maximum</strong> length</span>
+          </label>
+        </fieldset>
+        <h2>Letters</h2>
+        <small>Leave blank for no letter restrictions</small>
+        <input type="text" name="tray" />
+        <fieldset>
+          <label>
+            <input type="radio" name="traytype" value="some" checked />
+            <span>Uses <strong>some or all</strong> of the above</span>
+          </label>
+          <label>
+            <input type="radio" name="traytype" value="all" />
+            <span>Uses <strong>all</strong> of the above</span>
+          </label>
+          <label>
+            <input type="radio" name="traytype" value="all" />
+            <span
+              >Uses <strong>each</strong> of the above
+              <strong>once</strong></span
+            >
+          </label>
+          <label>
+            <input type="radio" name="traytype" value="none" />
+            <span>Uses <strong>none</strong> of the above</span>
+          </label>
+        </fieldset>
+        <h2>Results</h2>
+        <div class="results"></div>
+      </div>
     </main>
     <script src="compressedTrie.js"></script>
     <script src="app.js"></script>
