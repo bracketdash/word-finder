@@ -15,30 +15,34 @@ const results = document.querySelector(".results");
 let trie = {};
 
 function displayWords() {
+  const clues = template.value;
   // `clues` (string) is the known letters (lowercase a-z) of the word with "?" for unknown letters
   // `clues` can be completely blank for no restrictions
   // The left and right edges won't necessarily include "?" for each unknown letter
-  // For example, "l?g" could lead to "log", "flog", "logs", etc. depending on other restrictions below
-  const clues = template.value;
+  // For example, "l?g" could lead to "log", "flag", "logs", etc. depending on other restrictions below
+
+  const len = length.value;
+  const lenType = lengthType.find(({ checked }) => checked).value;
   // `len` (string) can be blank for no restriction, but if it has a value it will be a positive integer
   // `lenType` (string) controls what `len` means
   // if `lenType` is "exact", `len` represents the exact length of the word
   // if `lenType` is "min", `len` is the minimum length of the word
   // if `lenType` is "max", `len` is the maximum length of the word
-  const len = length.value;
-  const lenType = lengthType.find(({ checked }) => checked).value;
+
+  const letters = tray.value;
+  const lettersType = trayType.find(({ checked }) => checked).value;
   // `letters` (string) can be blank for no restrictions as well, and if it has a value, will only consist of lowercase a-z
   // `lettersType` (string) controls what `letters` means
   // if `lettersType` is "some", words generated are restricted to just those that can be made with the letters in `letters` (plus any existing in `clues`)
   // if `lettersType` is "all", words are restricted to just those that can be made using ALL of the letters in `letters` (plus any existing in `clues`) but repeats are okay
   // if `lettersType` is "each", words are restricted to just those that can be made using ALL of the letters in `letters` (plus any existing in `clues`) exactly once
   // if `lettersType` is "none", words are restricted to just those that can be made WITHOUT any of the letters in `letters`
-  const letters = tray.value;
-  const lettersType = trayType.find(({ checked }) => checked).value;
+
   const words = [];
   // TODO: make possible words from `trie` (exists outside this function but is accessible)
   // Note: `trie` is a prefix trie with `{$: 1}` as the terminator
   // Example: { a: { d: { $: 1 }}} if "ad" was the only word in the trie
+
   let markup = "";
   words.slice(0, 100).forEach((word) => {
     markup += `<div>${word}</div>`;
