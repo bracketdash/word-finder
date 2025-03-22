@@ -10,18 +10,27 @@ function checkBoard() {
 }
 
 function handleChangeTemplate() {
-  // TODO
-  console.log("handleChangeTemplate");
+  const cleanValue = template.value.toLowerCase().replace(/[^a-z\?]/g, "");
+  if (template.value !== cleanValue) {
+    template.value = cleanValue;
+  }
+  checkBoard();
 }
 
 function handleChangeLength() {
-  // TODO
-  console.log("handleChangeLength");
+  const cleanValue = length.value.replace(/[^0-9]/g, "");
+  if (length.value !== cleanValue) {
+    length.value = cleanValue;
+  }
+  checkBoard();
 }
 
 function handleChangeTray() {
-  // TODO
-  console.log("handleChangeTray");
+  const cleanValue = tray.value.toLowerCase().replace(/[^a-z]/g, "");
+  if (tray.value !== cleanValue) {
+    tray.value = cleanValue;
+  }
+  checkBoard();
 }
 
 template.addEventListener("keyup", handleChangeTemplate);
