@@ -4,9 +4,23 @@ const lengthType = document.querySelectorAll('input[name="lengthtype"]');
 const tray = document.querySelector('input[name="tray"]');
 const trayType = document.querySelectorAll('input[name="traytype"]');
 
-function checkBoard() {
+let trie = {};
+
+function displayWords() {
   // TODO
-  console.log("checkBoard");
+  console.log("displayWords");
+}
+
+function getTrie(compressed) {
+  let decompressed = compressed;
+  decompressed = decompressed.replace(/([A-Z])/g, (c) => c.toLowerCase() + "$");
+  decompressed = decompressed.replace(/([a-z])/g, '"$1":{');
+  decompressed = decompressed.replace(/([0-9]+)/g, "$1,").slice(0, -1);
+  decompressed = decompressed.replace(/\$([^0-9])/g, "$,$1");
+  const getEndBrackets = (c) => "}".repeat(parseInt(c, 10));
+  decompressed = decompressed.replace(/([0-9]+)/g, getEndBrackets);
+  decompressed = decompressed.replaceAll("$", '"$":1');
+  return JSON.parse(decompressed);
 }
 
 function handleChangeTemplate() {
@@ -14,7 +28,7 @@ function handleChangeTemplate() {
   if (template.value !== cleanValue) {
     template.value = cleanValue;
   }
-  checkBoard();
+  displayWords();
 }
 
 function handleChangeLength() {
@@ -22,7 +36,7 @@ function handleChangeLength() {
   if (length.value !== cleanValue) {
     length.value = cleanValue;
   }
-  checkBoard();
+  displayWords();
 }
 
 function handleChangeTray() {
@@ -30,7 +44,7 @@ function handleChangeTray() {
   if (tray.value !== cleanValue) {
     tray.value = cleanValue;
   }
-  checkBoard();
+  displayWords();
 }
 
 template.addEventListener("keyup", handleChangeTemplate);
@@ -39,11 +53,15 @@ length.addEventListener("keyup", handleChangeLength);
 length.addEventListener("change", handleChangeLength);
 
 lengthType.forEach((input) => {
-  input.addEventListener("change", checkBoard);
+  input.addEventListener("change", displayWords);
 });
 
 tray.addEventListener("keyup", handleChangeTray);
 
 trayType.forEach((input) => {
-  input.addEventListener("change", checkBoard);
+  input.addEventListener("change", displayWords);
+});
+
+setTimeout(() => {
+  trie = getTrie(compressedTrie);
 });
