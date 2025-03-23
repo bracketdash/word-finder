@@ -12,55 +12,101 @@ const trayType = Array.from(
 
 const results = document.querySelector(".results");
 
-let trie = {};
+let trie = [];
+
+const MAX_WORDS = 100;
+
+function removeMatchedLetters(word, pattern, lettersToRemove) {
+  const match = pattern.exec(word);
+  const matchIndex = match.index;
+  const matchedPortion = match[0];
+  const chars = word.split("");
+  for (let i = 0; i < lettersToRemove.length; i++) {
+    const letterToRemove = lettersToRemove[i];
+    const letterPosition = matchedPortion.indexOf(letterToRemove);
+    if (letterPosition !== -1) {
+      const actualPosition = matchIndex + letterPosition;
+      if (chars[actualPosition] === letterToRemove) {
+        chars[actualPosition] = "";
+      }
+    }
+  }
+  return chars.filter((e) => e);
+}
 
 function displayWords() {
   const clues = template.value;
-  const len = length.value;
+  const pattern = new RegExp(clues.replaceAll("?", "."));
+  console.log(pattern);
+  const lettersToRemove = clues.replaceAll("?", "").split("");
+  let len = parseInt(length.value, 10);
+  if (isNaN(len)) {
+    len = false;
+  }
   const lenType = lengthType.find(({ checked }) => checked).value;
-  const letters = tray.value;
+  const letters = tray.value.split("");
   const lettersType = trayType.find(({ checked }) => checked).value;
   const words = [];
   const stack = [[trie, ""]];
-
-  // TODO: finish adapting
-  const pattern = wordWithBlanks;
   while (stack.length > 0) {
     const [currentNode, prefix] = stack.pop();
-    if (currentNode.$ && prefix.length === pattern.length) {
-      let isMatch = true;
-      for (let i = 0; i < prefix.length; i++) {
-        if (pattern[i] !== "?" && pattern[i] !== prefix[i]) {
-          isMatch = false;
-          break;
+    if (
+      currentNode.$ &&
+      pattern.test(prefix) &&
+      (!len ||
+        (lenType === "exact" && prefix.length === len) ||
+        (lenType === "min" && prefix.length >= len) ||
+        (lenType === "max" && prefix.length <= len))
+    ) {
+      if (letters.length) {
+        const sansPattern = removeMatchedLetters(
+          prefix,
+          pattern,
+          lettersToRemove
+        );
+        switch (lettersType) {
+          case "somere":
+            if (!sansPattern.some((c) => !letters.includes(c))) {
+              words.push(prefix);
+            }
+            break;
+          case "someno":
+            // TODO: Can use some or all, no repeats
+            break;
+          case "allre":
+            if (
+              letters.every((c) => sansPattern.includes(c)) &&
+              !sansPattern.some((c) => !letters.includes(c))
+            ) {
+              words.push(prefix);
+            }
+            break;
+          case "allno":
+            // TODO: Must use all, no repeats
+            break;
+          case "none":
+            if (!sansPattern.some((c) => letters.includes(c))) {
+              words.push(prefix);
+            }
+            break;
         }
-        if (pattern[i] === "?" && !unusedLetters.includes(prefix[i])) {
-          isMatch = false;
-          break;
-        }
-      }
-      if (isMatch) {
+      } else {
         words.push(prefix);
       }
     }
-    if (prefix.length < pattern.length) {
-      const nextPosition = prefix.length;
+    if (
+      words.length < MAX_WORDS &&
+      (!len || lenType === "min" || prefix.length <= len)
+    ) {
       const chars = Object.keys(currentNode).filter((key) => key !== "$");
       for (let i = chars.length - 1; i >= 0; i--) {
         const char = chars[i];
-        if (pattern[nextPosition] !== "?" && pattern[nextPosition] !== char) {
-          continue;
-        }
-        if (pattern[nextPosition] === "?" && !unusedLetters.includes(char)) {
-          continue;
-        }
         stack.push([currentNode[char], prefix + char]);
       }
     }
   }
-
   let markup = "";
-  words.slice(0, 100).forEach((word) => {
+  words.forEach((word) => {
     markup += `<div>${word}</div>`;
   });
   results.innerHTML = markup;
@@ -91,6 +137,11 @@ function handleChangeLength() {
   if (length.value !== cleanValue) {
     length.value = cleanValue;
   }
+  if (cleanValue.length) {
+    lengthfieldset.className = "open";
+  } else {
+    lengthfieldset.className = "closed";
+  }
   displayWords();
 }
 
@@ -98,6 +149,11 @@ function handleChangeTray() {
   const cleanValue = tray.value.toLowerCase().replace(/[^a-z]/g, "");
   if (tray.value !== cleanValue) {
     tray.value = cleanValue;
+  }
+  if (cleanValue.length) {
+    trayfieldset.className = "open";
+  } else {
+    trayfieldset.className = "closed";
   }
   displayWords();
 }

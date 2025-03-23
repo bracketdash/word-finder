@@ -19,7 +19,7 @@
         <h2>Word length</h2>
         <small>Leave blank if no length information is known</small>
         <input type="number" name="length" />
-        <fieldset>
+        <fieldset id="lengthfieldset" class="closed">
           <label>
             <input type="radio" name="lengthtype" value="exact" checked />
             <span>Above is <strong>exact</strong> length</span>
@@ -36,25 +36,26 @@
         <h2>Letters</h2>
         <small>Leave blank for no letter restrictions</small>
         <input type="text" name="tray" />
-        <fieldset>
+        <fieldset id="trayfieldset" class="closed">
           <label>
-            <input type="radio" name="traytype" value="some" checked />
-            <span>Uses <strong>some or all</strong> of the above</span>
+            <input type="radio" name="traytype" value="somere" checked />
+            <span>Can use some or all, repeats allowed</span>
           </label>
           <label>
-            <input type="radio" name="traytype" value="all" />
-            <span>Uses <strong>all</strong> of the above</span>
+            <input type="radio" name="traytype" value="someno" checked />
+            <span>Can use some or all, no repeats</span>
           </label>
           <label>
-            <input type="radio" name="traytype" value="each" />
-            <span
-              >Uses <strong>each</strong> of the above
-              <strong>once</strong></span
-            >
+            <input type="radio" name="traytype" value="allre" />
+            <span>Must use all, repeats allowed</span>
+          </label>
+          <label>
+            <input type="radio" name="traytype" value="allno" />
+            <span>Must use all, no repeats</span>
           </label>
           <label>
             <input type="radio" name="traytype" value="none" />
-            <span>Uses <strong>none</strong> of the above</span>
+            <span>Must use <strong>none</strong></span>
           </label>
         </fieldset>
         <h2>Results</h2>

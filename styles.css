@@ -85,9 +85,35 @@ fieldset {
   width: calc(100% - 28px);
 }
 
+fieldset.closed {
+  border: none;
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
 label:has(input[type="radio"]) {
   cursor: pointer;
   display: block;
   height: 30px;
   line-height: 30px;
+}
+
+.results {
+  font-family: monospace;
+  font-size: 20px;
+  letter-spacing: 1px;
+  line-height: 30px;
+  padding-left: 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.results div {
+  border-radius: 5px;
+  border: 1px solid #bbb;
+  display: inline-block;
+  margin-bottom: 7px;
+  margin-right: 7px;
+  padding: 0 7px;
 }
