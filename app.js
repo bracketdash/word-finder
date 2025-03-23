@@ -75,7 +75,22 @@ function displayWords() {
             }
             break;
           case "someno":
-            // TODO: Can use some or all, no repeats
+            let isValid = true;
+            let availableLetters = [...letters];
+            if (!sansClues.some((c) => !letters.includes(c))) {
+              for (let i = 0; i < sansClues.length; i++) {
+                const c = sansClues[i];
+                const index = availableLetters.indexOf(c);
+                if (index === -1) {
+                  isValid = false;
+                  break;
+                }
+                availableLetters.splice(index, 1);
+              }
+              if (isValid) {
+                words.push(prefix);
+              }
+            }
             break;
           case "allre":
             if (
