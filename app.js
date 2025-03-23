@@ -81,7 +81,11 @@ function displayWords() {
             }
             break;
           case "allno":
-            // TODO: Must use all, no repeats
+            if (
+              !letters.reduce((r, c) => r.replace(c, ""), sansPattern).length
+            ) {
+              words.push(prefix);
+            }
             break;
           case "none":
             if (!sansPattern.some((c) => letters.includes(c))) {
