@@ -37,7 +37,6 @@ function removeMatchedLetters(word, pattern, lettersToRemove) {
 function displayWords() {
   const clues = template.value;
   const pattern = new RegExp(clues.replaceAll("?", "."));
-  console.log(pattern);
   const lettersToRemove = clues.replaceAll("?", "").split("");
   let len = parseInt(length.value, 10);
   if (isNaN(len)) {
