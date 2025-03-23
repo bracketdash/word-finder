@@ -21,17 +21,23 @@ function removeMatchedLetters(word, pattern, lettersToRemove) {
   const matchIndex = match.index;
   const matchedPortion = match[0];
   const chars = word.split("");
+  let searchStartIndex = 0;
   for (let i = 0; i < lettersToRemove.length; i++) {
     const letterToRemove = lettersToRemove[i];
-    const letterPosition = matchedPortion.indexOf(letterToRemove);
+    const letterPosition = matchedPortion.indexOf(
+      letterToRemove,
+      searchStartIndex
+    );
     if (letterPosition !== -1) {
       const actualPosition = matchIndex + letterPosition;
       if (chars[actualPosition] === letterToRemove) {
         chars[actualPosition] = "";
       }
+      searchStartIndex = letterPosition + 1;
     }
   }
-  return chars.filter((e) => e);
+  const cleanChars = chars.join("").split("");
+  return cleanChars;
 }
 
 function displayWords() {
@@ -58,14 +64,13 @@ function displayWords() {
         (lenType === "max" && prefix.length <= len))
     ) {
       if (letters.length) {
-        const sansPattern = removeMatchedLetters(
-          prefix,
-          pattern,
-          lettersToRemove
-        );
+        let sansClues = prefix;
+        if (lettersToRemove.length) {
+          sansClues = removeMatchedLetters(prefix, pattern, lettersToRemove);
+        }
         switch (lettersType) {
           case "somere":
-            if (!sansPattern.some((c) => !letters.includes(c))) {
+            if (!sansClues.some((c) => !letters.includes(c))) {
               words.push(prefix);
             }
             break;
@@ -74,21 +79,22 @@ function displayWords() {
             break;
           case "allre":
             if (
-              letters.every((c) => sansPattern.includes(c)) &&
-              !sansPattern.some((c) => !letters.includes(c))
+              letters.every((c) => sansClues.includes(c)) &&
+              !sansClues.some((c) => !letters.includes(c))
             ) {
               words.push(prefix);
             }
             break;
           case "allno":
             if (
-              !letters.reduce((r, c) => r.replace(c, ""), sansPattern).length
+              !letters.reduce((r, c) => r.replace(c, ""), sansClues.join(""))
+                .length
             ) {
               words.push(prefix);
             }
             break;
           case "none":
-            if (!sansPattern.some((c) => letters.includes(c))) {
+            if (!sansClues.some((c) => letters.includes(c))) {
               words.push(prefix);
             }
             break;
@@ -128,7 +134,7 @@ function getTrie(compressed) {
 }
 
 function handleChangeTemplate() {
-  const cleanValue = template.value.toLowerCase().replace(/[^a-z\?]/g, "");
+  const cleanValue = template.value.toLowerCase().replace(/[^a-z]/g, "?");
   if (template.value !== cleanValue) {
     template.value = cleanValue;
   }
