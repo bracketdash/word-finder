@@ -64,7 +64,7 @@ function displayWords() {
         (lenType === "max" && prefix.length <= len))
     ) {
       if (letters.length) {
-        let sansClues = prefix;
+        let sansClues = prefix.split("");
         if (lettersToRemove.length) {
           sansClues = removeMatchedLetters(prefix, pattern, lettersToRemove);
         }
@@ -102,6 +102,7 @@ function displayWords() {
             break;
           case "allno":
             if (
+              letters.every((c) => sansClues.includes(c)) &&
               !letters.reduce((r, c) => r.replace(c, ""), sansClues.join(""))
                 .length
             ) {
